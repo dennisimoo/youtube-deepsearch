@@ -63,8 +63,7 @@ class DatabaseStorage:
                 os.environ['http_proxy'] = original_http_proxy_lower
             if original_https_proxy_lower:
                 os.environ['https_proxy'] = original_https_proxy_lower
-        proxy_status = "with proxy" if os.getenv('YOUTUBE_PROXY') else "no proxy"
-        print(f"Database storage initialized with Supabase ({proxy_status})")
+        print("Database storage initialized with Supabase (no proxy)")
 
     def _generate_url_slug(self, title: str) -> str:
         """Generate a URL-friendly slug from a video title using only ASCII characters."""
