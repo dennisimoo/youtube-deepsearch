@@ -52,8 +52,13 @@ class Config:
     def get_proxy_config(cls):
         """Get proxy configuration for HTTP requests"""
         if cls.YOUTUBE_PROXY:
+            # If proxy already has protocol, use as is, otherwise add http://
+            proxy_url = cls.YOUTUBE_PROXY
+            if not proxy_url.startswith(('http://', 'https://')):
+                proxy_url = f'http://{proxy_url}'
+            
             return {
-                'http': f'http://{cls.YOUTUBE_PROXY}',
-                'https': f'http://{cls.YOUTUBE_PROXY}'
+                'http': proxy_url,
+                'https': proxy_url
             }
         return None
