@@ -2,6 +2,7 @@
 Main routes for the YouTube Deep Summary application
 """
 from flask import Blueprint, request, render_template, redirect
+from ..chapter_extractor import extract_video_info
 from ..database_storage import database_storage
 from ..video_processing import video_processor
 from ..utils.helpers import extract_video_id
@@ -45,8 +46,15 @@ def watch():
             # Video not found in database, try to automatically import it
             print(f"Video {video_id} not found in database, attempting automatic import...")
             
-            # Use consolidated import function (let it handle getting channel_id)
-            result = video_processor.process_video_complete(video_id, channel_id=None)
+            # Extract channel_id from video_info if available
+            try:
+                video_info = extract_video_info(video_id)
+                channel_id = video_info.get('channel_id') if video_info else None
+            except Exception:
+                channel_id = None
+            
+            # Use consolidated import function
+            result = video_processor.process_video_complete(video_id, channel_id)
             
             if result['status'] == 'error':
                 return render_template('error.html', 
